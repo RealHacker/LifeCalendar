@@ -1,5 +1,6 @@
 //index.js
 //获取应用实例
+var util = require('../../utils/util.js')
 var app = getApp()
 Page({
   data: {
@@ -7,7 +8,8 @@ Page({
     birthday: null,
     months:[],
     animation: [],
-    selected: -1
+    selected: -1,
+    currentIndex: -1
   },
   // cells per row, configured here
   perRow: 24,
@@ -27,20 +29,28 @@ Page({
       perRow: this.perRow
     });
   },
+  getCurrentMonthIndex: function(d){
+    var diff = util.getCurrentMonthIndexSince(d);
+    console.log(diff);
+    this.setData({currentIndex: diff})
+    return diff;
+  },
   //事件处理函数
   cellTapped: function(e){
+    // Place the editor at the bottom of screen
+    var res = wx.getSystemInfoSync();
+    var wh = res.windowHeight;
     this.setData({
-      clickx: e.detail.x,
-      clicky: e.detail.y
+      starty: wh
     });
     var idx = e.currentTarget.dataset['idx'];
-    console.log(parseInt(idx));
+    
     this.animation = wx.createAnimation({
       transformOrigin: "50% 50%",
-      duration: 1000,
+      duration: 500,
       timingFunction: "ease",
       delay: 0
-    }).top(0).left(0).bottom(0).right(0).opacity(1).step();
+    }).top(0).bottom(0).right(0).opacity(1).step();
     this.setData({
       selected: parseInt(idx),
       animation: this.animation.export()
@@ -55,8 +65,8 @@ Page({
       var monthObj = {
         year: year,
         month: month,
-        events: ["item1", "item2", "item3"],
-        mood: 0
+        events: ["Eat", "Pray", "Love"],
+        mood: 5
       };
       months.push(monthObj);
       month = month + 1;
@@ -74,34 +84,36 @@ Page({
       months: months
     });
     this.layoutGrid();
+    this.getCurrentMonthIndex(bday);
+  },
+  formSubmit: function(e){
+    var formData = e.detail.value;
+    var months = app.globalData.months;
+    months[this.data.selected].mood = formData.happiness;
+    months[this.data.selected].events = [formData.item0, formData.item1, formData.item2];
+    wx.setStorageSync('months', months);
+    this.setData({months: months})
+    this.closeEditor();
   },
   closeEditor: function(){
-    this.animation.top(this.data.clickx).left(this.data.clicky).bottom(0).right(0).opacity(0).step();
+    var res = wx.getSystemInfoSync();
+    var wh = res.windowHeight;
+    this.animation.top(wh).opacity(0).step();
     this.setData({
       animation: this.animation.export()
     })
   },
-  // bindViewTap: function() {
-  //   wx.navigateTo({
-  //     url: '../logs/logs'
-  //   })
-  // },
+
   onLoad: function () {
-    console.log('onLoad')
-    var that = this
-    //调用应用实例的方法获取全局数据
-    this.setData({
-      birthday: app.globalData.birthday,
-      months: app.globalData.months
-    });
-   // if(app.globalData.months){
-      this.layoutGrid();
-    //}
-    app.getUserInfo(function(userInfo){
-      //更新数据
+    var that = this;
+    app.getUserInfo(function(userInfo){      
       that.setData({
-        userInfo:userInfo
+        userInfo: userInfo,
+        birthday: app.globalData.birthday,
+        months: app.globalData.months
       })
+      that.layoutGrid();
+      that.getCurrentMonthIndex(app.globalData.birthday);
     });
     
   }

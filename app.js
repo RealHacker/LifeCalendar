@@ -5,8 +5,8 @@ App({
     birthday: null,
     months: []
   },
-  onLaunch: function () {
-    //调用API从本地缓存中获取数据
+  onLaunch: function () {    
+    this.getUserInfo();
     this.globalData.birthday = wx.getStorageSync('birthday') || null;
     this.globalData.months = wx.getStorageSync('months') || [];
   },

@@ -1,5 +1,8 @@
 <!--index.wxml-->
-<view wx:if="{{birthday == null}}" class="container">
+<view wx:if="{{userInfo == null}}" class='centered'>
+  <text>加载中...</text>
+</view>
+<view wx:elif="{{birthday == null}}" class="container">
   <view  bindtap="bindViewTap" class="userinfo">
     <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
     <text class="userinfo-nickname">{{userInfo.nickName}}</text>
@@ -12,19 +15,44 @@
   </view>
 </view>
 <view wx:else style="flex-direction:column">
+  <progress class="progress" percent="{{currentIndex*100.0/1200.0}}" active />
   <view class="grid-row" wx:for="{{rows}}" wx:key="*this" wx:for-item="row" style="flex-direction:row">
-    <view class="grid-cell" wx:for="{{columns}}"  wx:key="*this" wx:for-item="col" style="width:20rpx;height:20rpx;background-color:red">
-      <view class="cell" data-idx="{{row*perRow+col}}" bindtap="cellTapped">
+    <view class="grid-cell" wx:for="{{columns}}"  wx:key="*this" wx:for-item="col" style="width:20rpx;height:20rpx;">
+      <view wx:if="{{row*perRow+col<=currentIndex}}" class="cell-passed" data-idx="{{row*perRow+col}}" bindtap="cellTapped">
         <text>{{months[row*perRow+col].mood}}</text>
+      </view>
+      <view wx:else class="cell-future" data-idx="{{row*perRow+col}}">        
       </view>
     </view>
   </view>
-  <view animation="{{animation}}" class='editor' style="top:{{clickx}}px;left:{{clicky}}px">
+  <view animation="{{animation}}" class='editor' style="top:{{starty}}px;left:0px">
     <view wx:if="{{selected > 0}}">
-      <view>{{months[selected].year}}-{{months[selected].month}}</view>
-      <text>Mood: {{months[selected].mood}}</text>
-      <input wx:for="{{months[selected].events}}" wx:key="*this" wx:for-item="event" value="{{event}}"/>
-      <button bindtap="closeEditor" type="primary">CLOSE</button>
+      <form bindsubmit="formSubmit">
+      <view class='editor-title'>{{months[selected].year}} 年 {{months[selected].month}} 月</view>
+      <view class='section'>
+        <text class="section-title">How happy?</text>
+        <view class="section-body" style="flex-direction:row">
+          <image style="width:20px;height:20px" mode="aspectFit" src="sad.png"></image>
+          <slider name="happiness" style="display:inline-block;width:80%" bindchange="sliderChange" min="0" max="10" step="1" value="{{months[selected].mood}}" show-value/>
+          <image style="width:20px;height:20px" mode="aspectFit" src="happy.png"></image>
+        </view>
+      </view>
+      <view class='section'>
+        <text class="section-title">What did you do?</text>
+        <view class="section-body">
+          <view class="item" wx:for="{{months[selected].events}}" wx:for-item="event" wx:for-index="idx">
+            <text>{{idx+1}}.</text>
+            <input name="item{{idx}}" placeholder="记录一件重要的事情"
+              style="display:inline-block;border-bottom:1px solid #ccc;width:70%" 
+              max-length="30" typetype="text"  wx:key="*this" value="{{event}}"/>
+          </view>
+        </view>
+      </view>
+      <view style="flex-direction:row">
+        <button class="editor-button" bindtap="closeEditor" type="default">取消</button>
+        <button class="editor-button" formType="submit" type="primary">保存</button>        
+      </view>
+      </form>
     </view>
   </view>
 </view>

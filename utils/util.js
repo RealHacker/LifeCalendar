@@ -16,6 +16,14 @@ function formatNumber(n) {
   return n[1] ? n : '0' + n
 }
 
+function getCurrentMonthIndexSince(d){
+   var birthDate = new Date(d);
+   var now = new Date();
+   var yearDelta = now.getFullYear()-birthDate.getFullYear();
+   return (yearDelta-1)*12 + now.getMonth()+1 + (12-birthDate.getMonth())
+}
+
 module.exports = {
-  formatTime: formatTime
+  formatTime: formatTime,
+  getCurrentMonthIndexSince: getCurrentMonthIndexSince
 }

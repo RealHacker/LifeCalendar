@@ -5,7 +5,7 @@
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "人生百年",
+    "navigationBarTitleText": "百年月历",
     "navigationBarTextStyle":"black"
   }
 }

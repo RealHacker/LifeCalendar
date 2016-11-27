@@ -1,0 +1,30 @@
+<!--index.wxml-->
+<view wx:if="{{birthday == null}}" class="container">
+  <view  bindtap="bindViewTap" class="userinfo">
+    <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+    <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+  </view>
+  <view class="usermotto">
+    <picker mode="date" value="1982-06-15" 
+      start="1960-01-01" end="2016-01-01" bindchange="bindDateChange">
+      <button type="primary" class="user-motto">请选择您的生日</button>
+    </picker>
+  </view>
+</view>
+<view wx:else style="flex-direction:column">
+  <view class="grid-row" wx:for="{{rows}}" wx:key="*this" wx:for-item="row" style="flex-direction:row">
+    <view class="grid-cell" wx:for="{{columns}}"  wx:key="*this" wx:for-item="col" style="width:20rpx;height:20rpx;background-color:red">
+      <view class="cell" data-idx="{{row*perRow+col}}" bindtap="cellTapped">
+        <text>{{months[row*perRow+col].mood}}</text>
+      </view>
+    </view>
+  </view>
+  <view animation="{{animation}}" class='editor' style="top:{{clickx}}px;left:{{clicky}}px">
+    <view wx:if="{{selected > 0}}">
+      <view>{{months[selected].year}}-{{months[selected].month}}</view>
+      <text>Mood: {{months[selected].mood}}</text>
+      <input wx:for="{{months[selected].events}}" wx:key="*this" wx:for-item="event" value="{{event}}"/>
+      <button bindtap="closeEditor" type="primary">CLOSE</button>
+    </view>
+  </view>
+</view>

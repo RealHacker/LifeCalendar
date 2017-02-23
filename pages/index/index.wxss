@@ -21,6 +21,12 @@
   color: #aaa;
 }
 
+.progress-title {
+  text-align: center;
+  font-size: 10px;
+  color: #aaa;
+  margin-bottom:6px;
+}
 .usermotto {
   margin-top: 100px;
 }
@@ -40,15 +46,40 @@
   font-size: 7px;
   vertical-align: middle;
 }
+
 .cell-passed {
   width: 100%;
   height:100%;
   background-color:#1AAD16;
+  border-radius: 20px;
+}
+.mood-dot {
+  display: inline-block;
+  width: 10px;
+  height:10px;
+  margin:2px 26px;
+  border-radius: 20px;
+}
+.cell-mood1{
+  background-color:#1AAD16;
+}
+.cell-mood2{
+  background-color:aquamarine;
+}
+.cell-mood3{
+  background-color:azure;
+}
+.cell-mood4 {
+  background-color:bisque;
+}
+.cell-mood5 {
+  background-color:gold;
 }
 .cell-future {
   width: 100%;
   height:100%;
   background-color:beige;
+  border-radius: 20px;
 }
 .editor {
   text-align:center;

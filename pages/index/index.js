@@ -50,7 +50,7 @@ Page({
       duration: 500,
       timingFunction: "ease",
       delay: 0
-    }).top(0).bottom(0).right(0).opacity(1).step();
+    }).top(0).bottom(0).left(0).right(0).opacity(1).step();
     this.setData({
       selected: parseInt(idx),
       animation: this.animation.export()
@@ -66,7 +66,7 @@ Page({
         year: year,
         month: month,
         events: ["Eat", "Pray", "Love"],
-        mood: 5
+        mood: 3
       };
       months.push(monthObj);
       month = month + 1;

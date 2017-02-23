@@ -15,30 +15,45 @@
   </view>
 </view>
 <view wx:else style="flex-direction:column">
-  <progress class="progress" percent="{{currentIndex*100.0/1200.0}}" active />
+    <view class="progress-title">
+      <text>人生进度条</text>
+    </view>
+    <progress class="progress" percent="{{currentIndex*100.0/1200.0}}" active />
   <view class="grid-row" wx:for="{{rows}}" wx:key="*this" wx:for-item="row" style="flex-direction:row">
     <view class="grid-cell" wx:for="{{columns}}"  wx:key="*this" wx:for-item="col" style="width:20rpx;height:20rpx;">
-      <view wx:if="{{row*perRow+col<=currentIndex}}" class="cell-passed" data-idx="{{row*perRow+col}}" bindtap="cellTapped">
-        <text>{{months[row*perRow+col].mood}}</text>
+      <view wx:if="{{row*perRow+col<=currentIndex}}" class="cell-passed cell-mood{{months[row*perRow+col].mood}}" data-idx="{{row*perRow+col}}" bindtap="cellTapped">
+        <text></text>
       </view>
       <view wx:else class="cell-future" data-idx="{{row*perRow+col}}">        
       </view>
     </view>
+  </view>
+  <view animation="{{MonthAnimation}}" class="month">
+
   </view>
   <view animation="{{animation}}" class='editor' style="top:{{starty}}px;left:0px">
     <view wx:if="{{selected > 0}}">
       <form bindsubmit="formSubmit">
       <view class='editor-title'>{{months[selected].year}} 年 {{months[selected].month}} 月</view>
       <view class='section'>
-        <text class="section-title">How happy?</text>
-        <view class="section-body" style="flex-direction:row">
-          <image style="width:20px;height:20px" mode="aspectFit" src="sad.png"></image>
-          <slider name="happiness" style="display:inline-block;width:80%" bindchange="sliderChange" min="0" max="10" step="1" value="{{months[selected].mood}}" show-value/>
-          <image style="width:20px;height:20px" mode="aspectFit" src="happy.png"></image>
+        <text class="section-title">这个月你快乐吗?</text>
+        <view class="section-body" style="flex-direction:column">
+          <view style="flex-direction:row;justify-content:flex-start">
+            <view class="mood-dot cell-mood1"></view>
+            <view class="mood-dot cell-mood2"></view>
+            <view class="mood-dot cell-mood3"></view>
+            <view class="mood-dot cell-mood4"></view>
+            <view class="mood-dot cell-mood5"></view>
+          </view>
+          <view style="flex-direction:row">
+            <image style="width:18px;height:16px" mode="aspectFit" src="sad.png"></image>
+            <slider name="happiness" style="display:inline-block;width:76%" bindchange="sliderChange" min="1" max="5" step="1" value="{{months[selected].mood}}" show-value/>
+            <image style="width:18px;height:18px" mode="aspectFit" src="happy.png"></image>
+          </view>
         </view>
       </view>
       <view class='section'>
-        <text class="section-title">What did you do?</text>
+        <text class="section-title">三件最重要的事：</text>
         <view class="section-body">
           <view class="item" wx:for="{{months[selected].events}}" wx:for-item="event" wx:for-index="idx">
             <text>{{idx+1}}.</text>

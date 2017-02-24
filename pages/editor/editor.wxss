@@ -1,0 +1,61 @@
+/* pages/editor/editor.wxss */
+.editor {
+  text-align:center;
+  background-color: #eee;
+  position:absolute;
+  top:0px;
+  bottom:0px;
+  left:0px;
+  right:0px;
+}
+
+.section-header{
+  padding: 15px;
+  font-weight: bold; 
+}
+
+.section{
+  margin: 15px 0;
+}
+.section-title{
+  font-family: fantasy;
+}
+
+.section-body {
+  background: white;
+  margin-top:8px;
+  padding:15px;
+}
+
+.item{
+  flex-direction: row;
+}
+
+.editor-button{
+  display: inline-block;
+  margin:15px;
+  width: 40%;
+}
+
+.mood-dot {
+  display: inline-block;
+  width: 10px;
+  height:10px;
+  margin:2px 26px;
+  border-radius: 20px;
+}
+.cell-mood1{
+  background-color:darkslateblue;
+}
+.cell-mood2{
+  background-color:lightskyblue;
+}
+.cell-mood3{
+  background-color:gold;
+}
+.cell-mood4 {
+  background-color:lightpink;
+}
+.cell-mood5 {
+  background-color:orangered;
+}

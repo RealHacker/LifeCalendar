@@ -3,7 +3,7 @@
   <text>加载中...</text>
 </view>
 <view wx:elif="{{birthday == null}}" class="container">
-  <view  bindtap="bindViewTap" class="userinfo">
+  <view class="userinfo">
     <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
     <text class="userinfo-nickname">{{userInfo.nickName}}</text>
   </view>
@@ -19,55 +19,56 @@
       <text>人生进度条</text>
     </view>
     <progress class="progress" percent="{{currentIndex*100.0/1200.0}}" active />
-  <view class="grid-row" wx:for="{{rows}}" wx:key="*this" wx:for-item="row" style="flex-direction:row">
-    <view class="grid-cell" wx:for="{{columns}}"  wx:key="*this" wx:for-item="col" style="width:20rpx;height:20rpx;">
-      <view wx:if="{{row*perRow+col<=currentIndex}}" class="cell-passed cell-mood{{months[row*perRow+col].mood}}" data-idx="{{row*perRow+col}}" bindtap="cellTapped">
-        <text></text>
+  <view class="grid-row" wx:for="{{[0,1,2,3,4,5,6,7,8,9]}}" wx:key="*this" wx:for-item="row" style="flex-direction:row">
+    <view class="grid-cell" wx:for="{{[0,1,2,3,4,5,6,7,8,9]}}"  wx:key="*this" wx:for-item="col" style="flex-direction:column" data-year="{{birth_year+row*10+col}}" bindtap="yearTapped">
+      <!--The year title on top of 3*4 grid-->
+      <view class="year-title">
+        <text>{{birth_year+row*10+col}}</text>
       </view>
-      <view wx:else class="cell-future" data-idx="{{row*perRow+col}}">        
-      </view>
+      <!-- The 12 month cells of a year -->
+      <view class="year-row" wx:for="{{[0,1,2,3]}}" wx:key="*this" wx:for-item="i" style="flex-direction:row">
+        <view class="year-cell" wx:for="{{[0,1,2]}}" wx:key="*this" wx:for-item="j">
+          <!--cell-->
+          <view 
+          wx:if="{{birth_year+row*10+col>current_year||(birth_year+row*10+col==current_year&&i*3+j+1>current_month)||(row==0&&col==0&&i*3+j+1<birth_month)}}" class="cell-future" animation="">
+          </view> <!-- end of disabled cell -->
+          <view wx:else class="cell-passed cell-mood{{months[(birth_year+row*10+col)+''+(i*3+j+1)].mood}}" animation="">        
+          </view> <!-- end of enabled cell -->
+        </view> <!-- end of year column -->
+      </view> <!-- end of year row -->
+    </view> <!-- end of grid cell -->
+  </view> <!-- end grid row -->
+ 
+  <scroll-view scroll-y="true" animation="{{animation}}" class='yearView' style="top:{{screenHeight}}px;left:0px;right:0px;height:{{screenHeight}}px" bindscroll="scrolled">
+    <!-- header -->
+    <view class="year-header">
+      <text>{{selected_year}}</text>
     </view>
-  </view>
-  <view animation="{{MonthAnimation}}" class="month">
-
-  </view>
-  <view animation="{{animation}}" class='editor' style="top:{{starty}}px;left:0px">
-    <view wx:if="{{selected > 0}}">
-      <form bindsubmit="formSubmit">
-      <view class='editor-title'>{{months[selected].year}} 年 {{months[selected].month}} 月</view>
-      <view class='section'>
-        <text class="section-title">这个月你快乐吗?</text>
-        <view class="section-body" style="flex-direction:column">
-          <view style="flex-direction:row;justify-content:flex-start">
-            <view class="mood-dot cell-mood1"></view>
-            <view class="mood-dot cell-mood2"></view>
-            <view class="mood-dot cell-mood3"></view>
-            <view class="mood-dot cell-mood4"></view>
-            <view class="mood-dot cell-mood5"></view>
-          </view>
-          <view style="flex-direction:row">
-            <image style="width:18px;height:16px" mode="aspectFit" src="sad.png"></image>
-            <slider name="happiness" style="display:inline-block;width:76%" bindchange="sliderChange" min="1" max="5" step="1" value="{{months[selected].mood}}" show-value/>
-            <image style="width:18px;height:18px" mode="aspectFit" src="happy.png"></image>
+    <view class="body" style="flex-direction:column">
+      <view style="" wx:for="{{[0,1,2,3]}}" wx:key="*this" wx:for-item="i" style="flex-direction:row;align-items:flex-end">
+        <view style="display:inline-block;width:{{cellWidth}}px;height:{{cellHeight}}px" class="bigcell" wx:for="{{[0,1,2]}}" wx:key="*this" wx:for-item="j">
+          <view data-year="{{selected_year}}" data-month="{{i*3+j+1}}" bindtap="monthTapped" style="width:100%;height:100%">
+            <view class="month-header">
+              <text>{{monthNames[i*3+j]}}</text>
+              <view class="mood-dot-1 cell-mood{{months[selected_year+''+(i*3+j+1)].mood}}" style="float:right">
+              </view>
+            </view>
+            <view wx:if="{{months[selected_year+''+(i*3+j+1)].events.length>0}}">
+              <view class="event" wx:for="{{months[selected_year+''+(i*3+j+1)].events}}" wx:key="*this" wx:for-item="event">
+                <view class="mood-dot-2 cell-mood{{months[selected_year+''+(i*3+j+1)].mood}}"></view>
+                <text>{{event}}</text>
+              </view>
+            </view>
+            <view wx:else class="empty">
+              <text wx:if="{{selected_year==birth_year&&i*3+j+1<birth_month||selected_year==current_year&&i*3+j+1>current_month}}">无记录</text>
+              <text wx:else>本月没有纪录事件, 点此处记录</text>
+            </view>
           </view>
         </view>
       </view>
-      <view class='section'>
-        <text class="section-title">三件最重要的事：</text>
-        <view class="section-body">
-          <view class="item" wx:for="{{months[selected].events}}" wx:for-item="event" wx:for-index="idx">
-            <text>{{idx+1}}.</text>
-            <input name="item{{idx}}" placeholder="记录一件重要的事情"
-              style="display:inline-block;border-bottom:1px solid #ccc;width:70%" 
-              max-length="30" typetype="text"  wx:key="*this" value="{{event}}"/>
-          </view>
-        </view>
-      </view>
-      <view style="flex-direction:row">
-        <button class="editor-button" bindtap="closeEditor" type="default">取消</button>
-        <button class="editor-button" formType="submit" type="primary">保存</button>        
-      </view>
-      </form>
     </view>
-  </view>
+    <view class="footer">
+      <button type="primary" size="default" bindtap="closeSelf"> 返回 </button>
+    </view>
+  </scroll-view>
 </view>

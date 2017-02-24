@@ -7,8 +7,9 @@ App({
   },
   onLaunch: function () {    
     this.getUserInfo();
+    this.launched = wx.getStorageSync('launched') || false;
     this.globalData.birthday = wx.getStorageSync('birthday') || null;
-    this.globalData.months = wx.getStorageSync('months') || [];
+    this.globalData.months = wx.getStorageSync('months') || {};
   },
   getUserInfo:function(cb){
     var that = this

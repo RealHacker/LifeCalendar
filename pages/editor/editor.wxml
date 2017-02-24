@@ -1,0 +1,40 @@
+<view class='editor'>
+  <form bindsubmit="formSubmit">
+  <view class='section'>
+    <view class="section-header">
+      <text class="section-title">这个月你快乐吗?</text>
+    </view>
+    <view class="section-body" style="flex-direction:column">
+      <view style="flex-direction:row;margin-left:-18px;justify-content:space-between">
+        <view class="mood-dot cell-mood1"></view>
+        <view class="mood-dot cell-mood2"></view>
+        <view class="mood-dot cell-mood3"></view>
+        <view class="mood-dot cell-mood4"></view>
+        <view class="mood-dot cell-mood5"></view>
+      </view>
+      <view style="flex-direction:row">
+        <image style="width:18px;height:18px" mode="aspectFit" src="sad.png"></image>
+        <slider name="happiness" style="display:inline-block;width:76%" bindchange="sliderChange" min="1" max="5" step="1" value="{{mood}}" show-value/>
+        <image style="width:18px;height:18px" mode="aspectFit" src="happy.png"></image>
+      </view>
+    </view>
+  </view>
+  <view class='section'>
+    <view class="section-header">
+      <text class="section-title">本月大事件：</text>
+    </view>
+    <view class="section-body">
+      <view class="item" wx:for="{{[0,1,2]}}" wx:key="*this" wx:for-item="idx">
+        <text>{{idx+1}}.</text>
+        <input name="item{{idx}}" placeholder="一件重要的事情"
+          style="display:inline-block;border-bottom:1px solid #ccc;width:90%" 
+          max-length="15" typetype="text"  wx:key="*this" value="{{events[idx]}}"/>
+      </view>
+    </view>
+  </view>
+  <view style="flex-direction:row">
+    <button class="editor-button" bindtap="cancel" type="default">取消</button>
+    <button class="editor-button" formType="submit" type="primary">保存</button>        
+  </view>
+  </form>
+  </view>
